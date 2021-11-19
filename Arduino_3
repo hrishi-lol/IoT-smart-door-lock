@@ -1,1 +1,82 @@
+#include <Servo.h>
 
+Servo myservo;
+
+
+#define ledR2 5
+#define ledR1 4
+#define ledY2 3
+#define ledY1 2
+#define ledG1 1
+#define gas A0
+#define buzzer 8
+#define serv 9
+
+void setup()
+{
+    pinMode(ledR1, OUTPUT);
+    pinMode(ledR2, OUTPUT);
+    pinMode(ledY1, OUTPUT);
+    pinMode(ledY2, OUTPUT);
+    pinMode(ledG1, OUTPUT);
+    pinMode(buzzer,OUTPUT);
+    myservo.attach(serv);
+    pinMode(gas, INPUT);
+ 
+  
+    Serial.begin(9600);
+}
+
+void loop()
+{
+  int read= analogRead(gas);
+  int val= map(read,80,380,0,100);
+  Serial.println(val);
+  
+  int servo= map(read,80,380,0,180);
+  myservo.write(servo);
+  
+  
+   digitalWrite(ledG1, HIGH);
+  
+   
+  if(val>=20 && val<40){
+    digitalWrite(ledY1,HIGH);
+    
+  } 
+  
+  if(val>=40 && val<60){
+    digitalWrite(ledY2,HIGH);
+  }
+  
+  if(val>=60 && val<80){
+    digitalWrite(ledR1,HIGH);
+  }
+  
+  if(val>=80){
+      digitalWrite(ledG1, HIGH);
+      digitalWrite(ledY1, HIGH);
+      digitalWrite(ledY2, HIGH);
+      digitalWrite(ledR1, HIGH);
+      digitalWrite(ledR2, HIGH);
+      
+      delay(500);
+      digitalWrite(ledG1, LOW);
+      digitalWrite(ledY1, LOW);
+      digitalWrite(ledY2, LOW);
+      digitalWrite(ledR1, LOW);
+      digitalWrite(ledR2, LOW);
+    
+      delay(1000);
+      
+      tone(buzzer,1000,500); // function that allows you to set the frequency and duration of the buzzer
+    
+  }
+ 
+  if (val<80){
+    noTone(buzzer);
+  }
+
+
+  
+}
